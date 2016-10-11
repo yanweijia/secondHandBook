@@ -25,6 +25,67 @@ public class DBHelper {
 	private ResultSet rs = null;
 	
 	
+	
+	
+	/**
+	 * 根据价格区间查询书籍
+	 * @param book_name 书籍名称
+	 * @param low 最低价格 如果为空,默认为0
+	 * @param high 价格封顶 如果为空,默认为int的最大值
+	 * @param singlePageNum 单页条数,如果为空,则默认为10条
+	 * @param page 页数,第几页,如果为空,则默认为第一页
+	 * @param sortWay 排序方式  如果为空则默认true,升序:true 降序:false
+	 * @return 查询后的结果,json封装
+	 */
+	public JSONObject getBookBy(String book_name,Integer low,Integer high,Integer singlePageNum,Integer page,Boolean sortWay){
+		if(low==null)
+			low = 0;
+		if(high==null)
+			high=Integer.MAX_VALUE;
+		if(singlePageNum==null)
+			singlePageNum = 10;
+		if(page==null)
+			page=1;
+		if(sortWay==null)
+			sortWay=true;
+		if(book_name==null || book_name.equals("null"))
+			book_name="";
+		String sql = "SELECT book_id,book_name,book_price,viewed,postdate,book_img_thumbnail FROM books WHERE status=1 AND book_name LIKE '%" + book_name +  "%' AND book_price>="+low+" AND book_price<=" + high+" ORDER BY book_price "+(sortWay?"ASC":"DESC") + " LIMIT "+((page-1)*singlePageNum) + "," + (page*singlePageNum);
+		System.out.println(sql);
+		JSONObject jsonResult = new JSONObject();
+		try{
+			getConnection();
+			stmt = conn.createStatement();
+			rs = stmt.executeQuery(sql);
+			jsonResult.put("status", "success");
+			jsonResult.put("reason", null);
+			JSONArray jsonArrayBook = new JSONArray();
+			int count = 0;	//计数器,总共多少个
+			while(rs.next()){
+				JSONObject jsonBook = new JSONObject();
+				jsonBook.put("book_id", rs.getInt("book_id"));
+				jsonBook.put("book_name", rs.getString("book_name"));
+				jsonBook.put("book_price", rs.getString("book_price"));
+				jsonBook.put("viewed", rs.getInt("viewed"));
+				jsonBook.put("postdate", rs.getString("postdate"));
+				jsonBook.put("book_img_thumbnail", rs.getString("book_img_thumbnail"));
+				jsonArrayBook.add(jsonBook);
+				count++;
+			}
+			jsonResult.put("count", count);
+			jsonResult.put("books", jsonArrayBook);
+			return jsonResult;
+			
+		}catch (Exception e) {
+			e.printStackTrace();
+			jsonResult.put("status", "fail");
+			jsonResult.put("reason", "服务器异常:" + e.getMessage());
+			return jsonResult;
+		}
+	}
+	
+	
+	
 	/**
 	 * 发布一本新二手书
 	 * @param book_name 书名
@@ -168,6 +229,7 @@ public class DBHelper {
 			jsonResult.put("status", "success");
 			jsonResult.put("reason", null);
 			JSONArray jsonArrayBook = new JSONArray();
+			int count = 0;	//计数器,总共多少个
 			while(rs.next()){
 				JSONObject jsonBook = new JSONObject();
 				jsonBook.put("book_id", rs.getInt("book_id"));
@@ -177,7 +239,9 @@ public class DBHelper {
 				jsonBook.put("postdate", rs.getString("postdate"));
 				jsonBook.put("book_img_thumbnail", rs.getString("book_img_thumbnail"));
 				jsonArrayBook.add(jsonBook);
+				count++;
 			}
+			jsonResult.put("count", count);
 			jsonResult.put("books", jsonArrayBook);
 			return jsonResult;
 			

@@ -9,6 +9,14 @@
 	<meta http-equiv="description" content="这是一个开发文档.">
 	<meta http-equiv="content-type" content="text/html;charset=UTF-8">
 	<title>校园二手书交易平台  开发文档</title>
+	
+	<style type="text/css">
+		pre{
+			white-space:pre-wrap;
+			word-wrap:break-word;		
+		}
+	</style>
+
   </head>
   
   <body>
@@ -17,13 +25,15 @@
   		<h4>获取所有书籍:</h4>
   		<strong>&nbsp;&nbsp;&nbsp;方法名称:getAllBooks</strong><br/>
   		<pre>
-		请求方法:GET<br/>
-		参数:无参<br/>
-		方法说明:返回JSON格式,最多100本<br/>
+		请求方法:GET
+		参数:无参
+		方法说明:返回JSON格式,最多100本
 			status:返回状态,success为成功,fail为失败
 			reason:失败原因,当status为fail的时候有效.
+			count:当前结果中书籍的个数
+			books:书籍的JSONArray封装好的数组
 		返回JSON格式如下:
-			{"status":"success","books":[{"book_id":2,"book_name":"MySQL从入门到精通","book_price":"60","viewed":0,"postdate":"2016-10-11 14:01:00.0","book_img_thumbnail":"缩略图"},{"book_id":1,"book_name":"疯狂Android讲义","book_price":"50","viewed":0,"postdate":"2016-10-10 10:10:50.0","book_img_thumbnail":"缩略图"}]}
+			{"status":"success","count":2,"books":[{"book_id":2,"book_name":"MySQL从入门到精通","book_price":"60","viewed":0,"postdate":"2016-10-11 14:01:00.0","book_img_thumbnail":"缩略图"},{"book_id":1,"book_name":"疯狂Android讲义","book_price":"50","viewed":0,"postdate":"2016-10-10 10:10:50.0","book_img_thumbnail":"缩略图"}]}
 		</pre>
   		<h4>获取详细信息:</h4>
   		<strong>&nbsp;&nbsp;&nbsp;方法名称:getDetailInfo</strong><br/>
@@ -75,6 +85,27 @@
   		返回JSON格式如下:
   			正确结果:{"status":"success"}
   			错误结果:{"status":"fail":"具体的错误原因"}
+  		</pre>
+  		<h4>根据指定条件查找书籍:</h4>
+  		<strong>&nbsp;&nbsp;&nbsp;方法名称:getBooksBy</strong><br/>
+  		<pre>
+  		请求方法:GET
+  		参数:book_name String 书籍名称  ,默认为空,匹配方式为%,匹配所有书籍
+  			low	int 最低价格(包括) ,默认为0
+  			high int 最高价格(包括) ,默认为int的最大值 Integer.MAX_VALUE
+  			singlePageNum int 单页多少个结果 ,默认10
+  			page int 第几页 ,默认1
+  			sortWay boolean 排序方式,true为按照价格从低到高,false相反  .默认true
+  		注意:上述参数可以全传,也可以全不传,不传的则使用默认值.
+  		方法说明:返回JSON格式,最多100本
+			status:返回状态,success为成功,fail为失败
+			reason:失败原因,当status为fail的时候有效.
+			count:当前结果中书籍的个数
+			books:书籍的JSONArray封装好的数组
+  		调用示例:
+  			http://yanweijia.cn:8080/secondHandBook/getBooksBy?book_name=疯狂&low=30&high=50
+  		返回JSON格式如下:
+			{"status":"success","count":1,"books":[{"book_id":1,"book_name":"疯狂Android讲义","book_price":"50","viewed":0,"postdate":"2016-10-10 10:10:50.0","book_img_thumbnail":"缩略图"}]}
   		</pre>
   </body>
 </html>
