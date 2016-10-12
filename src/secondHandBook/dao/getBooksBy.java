@@ -30,27 +30,27 @@ public class getBooksBy extends HttpServlet {
 		Boolean sortWay;
 		
 		//解析最低价格
-		if(strLow==null)
+		if(strLow==null || strLow.equals(""))
 			low = null;
 		else
 			low = Integer.parseInt(strLow);
 		//解析最高价格
-		if(strHigh==null)
+		if(strHigh==null || strHigh.equals(""))
 			high=null;
 		else
 			high = Integer.parseInt(strHigh);
 		//解析单页数目
-		if(strSinglePageNum==null)
+		if(strSinglePageNum==null || strSinglePageNum.equals(""))
 			singlePageNum=null;
 		else
 			singlePageNum = Integer.parseInt(strSinglePageNum);
 		//解析当前页数
-		if(strPage==null)
+		if(strPage==null || strPage.equals(""))
 			page = null;
 		else
 			page = Integer.parseInt(strPage);
 		//解析排序方式
-		if(strSortWay==null)
+		if(strSortWay==null || strSortWay.equals(""))
 			sortWay = null;
 		else
 			sortWay = Boolean.parseBoolean(strSortWay);

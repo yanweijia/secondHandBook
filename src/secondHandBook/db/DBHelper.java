@@ -202,6 +202,9 @@ public class DBHelper {
 				jsonBook.put("postdate", rs.getString("postdate"));
 				jsonBook.put("book_img", rs.getString("book_img"));
 				jsonResult.put("book", jsonBook);
+				//将被浏览数+1
+				sql = "UPDATE books SET viewed=viewed+1 WHERE book_id=" + book_id;
+				stmt.executeUpdate(sql);
 			}
 			else{
 				jsonResult.put("status", "fail");
@@ -210,6 +213,7 @@ public class DBHelper {
 			return jsonResult;
 		}catch(Exception e){
 			e.printStackTrace();
+			jsonResult.clear();	//先清空,防止之前已经有放的信息了.
 			jsonResult.put("status", "fail");
 			jsonResult.put("reason", "数据库异常" + e.getMessage());
 			return jsonResult;
