@@ -3,7 +3,7 @@
 ##获取所有书籍:
 
 ###方法名称:getAllBooks
-####请求方法:GET
+		请求方法:GET
 		参数:无参
 		方法说明:返回JSON格式,最多100本
 			status:返回状态,success为成功,fail为失败
